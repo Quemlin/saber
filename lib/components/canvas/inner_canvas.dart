@@ -13,6 +13,7 @@ import 'package:saber/data/tools/select.dart';
 import 'package:saber/i18n/strings.g.dart';
 import 'package:sbn/canvas_background_pattern.dart';
 import 'package:sbn/quill_styles.dart';
+import 'package:saber/data/extensions/color_extensions.dart';
 
 class InnerCanvas extends StatefulWidget {
   const new({
@@ -63,6 +64,9 @@ class _InnerCanvasState extends State<InnerCanvas> {
     final colorScheme = theme.colorScheme;
     final brightness = theme.brightness;
     final invert = stows.editorAutoInvert.value && brightness == .dark;
+    final invertBackgroundPattern =
+        !stows.editorAutoInvert.value && brightness == .dark;
+
     final Color backgroundColor =
         widget.coreInfo.backgroundColor ?? InnerCanvas.defaultBackgroundColor;
 
@@ -123,8 +127,12 @@ class _InnerCanvasState extends State<InnerCanvas> {
           }(),
           lineHeight: widget.coreInfo.lineHeight,
           lineThickness: widget.coreInfo.lineThickness,
-          primaryColor: colorScheme.primary,
-          secondaryColor: colorScheme.secondary,
+          primaryColor: colorScheme.primary.withInversion(
+            invertBackgroundPattern,
+          ),
+          secondaryColor: colorScheme.secondary.withInversion(
+            invertBackgroundPattern,
+          ),
         ),
         foregroundPainter: CanvasPainter(
           repaint: widget.redrawPageListenable,
